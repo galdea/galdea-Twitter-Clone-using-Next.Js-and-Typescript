@@ -10,8 +10,6 @@ import { api } from "~/utils/api";
 import { Button } from "./Button";
 import { ProfileImage } from "./profileImage";
 
-import { HTMLTextAreaElement}
-
 function updateTextAreaSize(textArea?: HTMLTextAreaElement) {
   if (textArea == null) return;
   textArea.style.height = "0";
@@ -20,7 +18,7 @@ function updateTextAreaSize(textArea?: HTMLTextAreaElement) {
 
 export function NewTweetForm() {
   const session = useSession();
-  if (session.status !== "authenticated") return;
+  if (session.status !== "authenticated") return null; // Return null if not authenticated
 
   return <Form />;
 }
@@ -28,14 +26,12 @@ export function NewTweetForm() {
 function Form() {
   const session = useSession();
   const [inputValue, setInputValue] = useState("");
-  const textAreaRef = useRef<HTMLTextAreaElement>();
-  const inputRef = useCallback((textArea: HTMLTextAreaElement) => {
-    updateTextAreaSize(textArea);
-    textAreaRef.current = textArea;
-  }, []);
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   useLayoutEffect(() => {
-    updateTextAreaSize(textAreaRef.current);
+    if (textAreaRef.current) {
+      updateTextAreaSize(textAreaRef.current);
+    }
   }, [inputValue]);
 
   const createTweet = api.tweet.create.useMutation({
@@ -44,13 +40,21 @@ function Form() {
     },
   });
 
-  if (session.status !== "authenticated") return;
+  if (session.status !== "authenticated") return null; // Return null if not authenticated
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
 
     createTweet.mutate({ content: inputValue });
   }
+
+  const inputRef = useCallback((textArea: HTMLTextAreaElement) => {
+    if (textArea) {
+      updateTextAreaSize(textArea);
+      textAreaRef.current = textArea;
+    }
+  }, []);
+
   return (
     <form
       onSubmit={handleSubmit}
