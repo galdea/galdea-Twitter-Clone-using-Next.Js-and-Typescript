@@ -1,4 +1,3 @@
-import { Tweet } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { VscHeart, VscHeartFilled } from "react-icons/vsc";
