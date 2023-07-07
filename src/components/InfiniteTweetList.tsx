@@ -1,7 +1,9 @@
+import { Tweet } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { VscHeart, VscHeartFilled } from "react-icons/vsc";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { IconHoverEffect } from "./IconHoverEffect";
 import { ProfileImage } from "./profileImage";
 
 type Tweet = {
@@ -107,4 +109,24 @@ function HeartButton({ likedByMe, likeCount }: HeartButtonProps) {
       </div>
     );
   }
+  return (
+    <button
+      className={`groups ml-2 flex items-center gap-1 self-start transition-colors duration-200 ${
+        likedByMe
+          ? "text-red-500"
+          : "text-gray-500 hover:text-red-500 focus-visible:text-red-500"
+      }`}
+    >
+      <IconHoverEffect red>
+        <HeartIcon
+          className={`transition-colors duration-200 ${
+            likedByMe
+              ? "fill-red-500"
+              : "fill-gray-500 group-hover:fill-red-500 group-focus-visible:fill-red-500"
+          }`}
+        />
+      </IconHoverEffect>
+      <span>{likeCount}</span>
+    </button>
+  );
 }

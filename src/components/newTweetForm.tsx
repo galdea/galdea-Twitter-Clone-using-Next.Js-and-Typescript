@@ -40,7 +40,7 @@ function Form() {
     },
   });
 
-  if (session.status !== "authenticated") return null; // Return null if not authenticated
+  if (session.status !== "authenticated") return null;
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
